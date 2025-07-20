@@ -1,0 +1,24 @@
+- name: Configurar servidores web
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Actualizar APT e instalar nginx
+      apt:
+        update_cache: yes
+        name: nginx
+        state: present
+
+    - name: Copiar página personalizada
+      copy:
+        src: site/index.html
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Asegurar que nginx esté corriendo
+      service:
+        name: nginx
+        state: started
+        enabled: yes
